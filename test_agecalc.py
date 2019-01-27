@@ -16,8 +16,8 @@ def test_calculate_greater_month_day():
 
 def test_calculate_smaller_month_day():
     birthdate = date(2000, 1, 2)
-    evaldate = date(2011, 1, 1)
-    assert agecalc.calculate(birthdate, evaldate) == 10
+    evaldate = date(2010, 1, 1)
+    assert agecalc.calculate(birthdate, evaldate) == 9
 
 def test_calculate_present_date_less_than_birthdate_raises_valueerror():
     birthdate = date(2000, 1, 1)
