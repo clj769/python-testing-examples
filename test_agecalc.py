@@ -5,13 +5,19 @@ import agecalc
 
 
 def test_calculate_exact_month_day():
-    assert agecalc.calculate(date(2000, 1, 1), date(2010, 1, 1)) == 10
+    birthdate = date(2000, 1, 1)
+    evaldate = date(2010, 1, 1)
+    assert agecalc.calculate(birthdate, evaldate) == 10
 
 def test_calculate_greater_month_day():
-    assert agecalc.calculate(date(2000, 1, 1), date(2010, 2, 1)) == 10
+    birthdate = date(2000, 1, 1)
+    evaldate = date(2010, 2, 1)
+    assert agecalc.calculate(birthdate, evaldate) == 10
 
 def test_calculate_smaller_month_day():
-    assert agecalc.calculate(date(2000, 1, 2), date(2010, 1, 1)) == 9
+    birthdate = date(2000, 1, 2)
+    evaldate = date(2011, 1, 1)
+    assert agecalc.calculate(birthdate, evaldate) == 10
 
 def test_calculate_present_date_less_than_birthdate_raises_valueerror():
     birthdate = date(2000, 1, 1)
