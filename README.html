@@ -1,0 +1,318 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Welcome file</title>
+  <link rel="stylesheet" href="https://stackedit.io/style.css" />
+</head>
+
+<body class="stackedit">
+  <div class="stackedit__html"><h1 id="testing-strategy">Testing Strategy</h1>
+<h2 id="table-of-contents">Table of Contents</h2>
+<ol>
+<li><a href="#workflow">Developer’s workflow</a></li>
+<li><a href="#testing-styles">Testing Styles</a>
+<ol>
+<li><a href="#tdd">TDD</a></li>
+<li><a href="#tld">TLD</a></li>
+</ol>
+</li>
+<li><a href="#testing-python-code">Testing Python Code</a>
+<ol>
+<li><a href="#tools">Tools</a></li>
+<li><a href="#gherkin">Gherkin</a></li>
+<li><a href="#pylint-result">Pylint Result</a></li>
+<li><a href="#examples">Examples</a>
+<ul>
+<li><a href="#pytest">Pytest</a></li>
+<li><a href="#behave">Behave</a></li>
+</ul>
+</li>
+</ol>
+</li>
+</ol>
+<h2 id="developers-workflow-a-idworkflowa">Developer’s workflow <a id="workflow"></a></h2>
+<p>Example workflow (using <a href="https://www.atlassian.com/git/tutorials/comparing-workflows/feature-branch-workflow">feature branch workflow</a>):</p>
+<ol>
+<li>Update Master branch</li>
+<li>Create a new branch for an issue</li>
+<li>Write, test, and repeat
+<ul>
+<li>Write and run unit tests for any changes</li>
+<li>Run linters and fix code style before pushing</li>
+<li>Push changes to central repository</li>
+</ul>
+</li>
+<li>Create a pull request
+<ul>
+<li>Code review, more tests to ensure code quality</li>
+<li>Accept pull request and merge to Master</li>
+</ul>
+</li>
+</ol>
+<p>Many of these steps can be automated with CI/CD tools.</p>
+<p><img src="https://raw.githubusercontent.com/peter-evolent/python-testing-examples/master/images/cicd-pipeline.png" alt="Pipeline"></p>
+<h2 id="testing-styles-a-idtesting-stylesa">Testing Styles <a id="testing-styles"></a></h2>
+<p>There are many different testing styles, TDD, BDD, ATDD, TLD, etc. Whichever style you choose, just remember that testing your code is very important.</p>
+<h3 id="test-driven-development-a-idtdda">Test-Driven Development <a id="tdd"></a></h3>
+<p>TDD is a software development process that relies on the repetition of a very short development cycle: requirements are turned into very specific test cases, then the software is improved to pass the new tests, only.</p>
+<p>Three rules of TDD:</p>
+<ol>
+<li>You are not allowed to write any production code unless it is to make a failing unit test pass.</li>
+<li>You are not allowed to write any more of a unit test than is sufficient to fail; and compilation failures are failures.</li>
+<li>You are not allowed to write any more production code than is sufficient to pass the one failing unit test.</li>
+</ol>
+<p align="center">
+  <img width="400" height="350" src="https://raw.githubusercontent.com/peter-evolent/python-testing-examples/master/images/tdd-cycle.png">
+</p>
+<h3 id="test-last-development-a-idtlda">Test-Last Development <a id="tld"></a></h3>
+<p>TLD is a traditional and most common approach of testing where testing is done only after implementation code has been written.</p>
+<h2 id="testing-python-code-a-idtesting-python-codea">Testing Python code <a id="testing-python-code"></a></h2>
+<p>For any python project, you will be using the tools below. In addition, writing scenarios with Gherkin syntax can be useful if you want describe features using natural language. Check <a href="https://docs.python-guide.org/writing/tests/">this</a> document for details.</p>
+<h3 id="tools-a-idtoolsa">Tools <a id="tools"></a></h3>
+<ul>
+<li>
+<p><a href="https://virtualenv.pypa.io/en/stable/">Virtualenv</a>: a tool to create isolated Python environments. This means that each project can have its own dependencies, regardless of what dependencies every other project has.</p>
+</li>
+<li>
+<p><a href="https://docs.pytest.org/en/latest/">Pytest</a>: a test framework for python  that makes it easy to write small tests, yet scales to support complex functional testing for applications and libraries.</p>
+</li>
+<li>
+<p><a href="https://docs.python.org/dev/library/unittest.mock.html">Mock</a>: a library for testing in Python. It allows you to replace parts of your system under test with mock objects and make assertions about how they have been used. As of Python 3.3, it is available in the standard library.</p>
+</li>
+<li>
+<p><a href="https://tox.readthedocs.io/en/latest/">Tox</a>: a tool for automating test environment management and testing against multiple interpreter configurations(Python2, Python3, …).</p>
+</li>
+<li>
+<p><a href="https://www.pylint.org/">Pylint</a>: a source-code, bug and quality checker for the Python programming language. It follows the style recommended by PEP 8, the Python style guide.</p>
+</li>
+</ul>
+<h3 id="gherkin-a-idgherkina">Gherkin <a id="gherkin"></a></h3>
+<p>Gherkin is a Business Readable, Domain Specific Language created especially for behavior descriptions. It gives you the ability to remove logic details from behavior tests.</p>
+<p>Gherkin serves two purposes: serving as your project’s documentation and automated tests. Behat also has a bonus feature: it talks back to you using real, human language telling you what code you should write.</p>
+<p>Example Feature</p>
+<pre class=" language-gherkin"><code class="prism  language-gherkin"><span class="token feature"><span class="token keyword">Feature:</span><span class="token important"> Google Homepage Search</span>
+
+</span><span class="token scenario"><span class="token keyword">Scenario:</span><span class="token important"> User sees the header</span></span>
+    <span class="token atrule">Given</span> I’m on the homepage
+    <span class="token atrule">Then</span> I see the header
+
+<span class="token scenario"><span class="token keyword">Scenario:</span><span class="token important"> User can search with “Google Search”</span></span>
+    <span class="token atrule">Given</span> I’m on the homepage
+    <span class="token atrule">When</span> I type “random page” into the search field
+    <span class="token atrule">And</span> I click the Google Search button
+    <span class="token atrule">Then</span> I go to the random page search results
+
+<span class="token scenario"><span class="token keyword">Scenario:</span><span class="token important"> User can search with “I’m Feeling Lucky”</span></span>
+    <span class="token atrule">Given</span> I’m on the homepage
+    <span class="token atrule">When</span> I type “random page” into the search field
+    <span class="token atrule">And</span> I click the I’m Feeling Lucky button
+    <span class="token atrule">Then</span> I go to a random page
+</code></pre>
+<h3 id="pylint-result-a-idpylint-resulta">Pylint Result <a id="pylint-result"></a></h3>
+<pre class=" language-text"><code class="prism  language-text">************* Module agecalc
+agecalc.py:1:0: C0111: Missing module docstring (missing-docstring)
+agecalc.py:18:-1: W0105: String statement has no effect (pointless-string-statement)
+
+
+Report
+======
+7 statements analysed.
+
+Statistics by type
+------------------
+
++---------+-------+-----------+-----------+------------+---------+
+|type     |number |old number |difference |%documented |%badname |
++=========+=======+===========+===========+============+=========+
+|module   |1      |1          |=          |0.00        |0.00     |
++---------+-------+-----------+-----------+------------+---------+
+|class    |0      |0          |=          |0           |0        |
++---------+-------+-----------+-----------+------------+---------+
+|method   |0      |0          |=          |0           |0        |
++---------+-------+-----------+-----------+------------+---------+
+|function |1      |1          |=          |100.00      |0.00     |
++---------+-------+-----------+-----------+------------+---------+
+
+
+
+Raw metrics
+-----------
+
++----------+-------+------+---------+-----------+
+|type      |number |%     |previous |difference |
++==========+=======+======+=========+===========+
+|code      |8      |36.36 |8        |=          |
++----------+-------+------+---------+-----------+
+|docstring |9      |40.91 |9        |=          |
++----------+-------+------+---------+-----------+
+|comment   |0      |0.00  |0        |=          |
++----------+-------+------+---------+-----------+
+|empty     |5      |22.73 |5        |=          |
++----------+-------+------+---------+-----------+
+
+
+
+Duplication
+-----------
+
++-------------------------+------+---------+-----------+
+|                         |now   |previous |difference |
++=========================+======+=========+===========+
+|nb duplicated lines      |0     |0        |=          |
++-------------------------+------+---------+-----------+
+|percent duplicated lines |0.000 |0.000    |=          |
++-------------------------+------+---------+-----------+
+
+
+
+Messages by category
+--------------------
+
++-----------+-------+---------+-----------+
+|type       |number |previous |difference |
++===========+=======+=========+===========+
+|convention |1      |1        |=          |
++-----------+-------+---------+-----------+
+|refactor   |0      |0        |=          |
++-----------+-------+---------+-----------+
+|warning    |1      |1        |=          |
++-----------+-------+---------+-----------+
+|error      |0      |0        |=          |
++-----------+-------+---------+-----------+
+
+
+
+Messages
+--------
+
++---------------------------+------------+
+|message id                 |occurrences |
++===========================+============+
+|pointless-string-statement |1           |
++---------------------------+------------+
+|missing-docstring          |1           |
++---------------------------+------------+
+
+
+
+
+------------------------------------------------------------------
+Your code has been rated at 7.14/10 (previous run: 7.14/10, +0.00)
+</code></pre>
+<h3 id="examples-a-idexamplesa">Examples <a id="examples"></a></h3>
+<p>This section will demonstrate how to to write tests for python code with different testing frameworks. For full examples, please check <a href="https://github.com/peter-evolent/python-testing-examples">this</a> repository.</p>
+<p>Consider a feature that calculate age given birthdate and evaldate, and we might write code look like this:</p>
+<pre class=" language-python"><code class="prism  language-python"><span class="token comment"># agecalc.py</span>
+<span class="token keyword">from</span> datetime <span class="token keyword">import</span> date
+
+
+<span class="token keyword">def</span> <span class="token function">calculate</span><span class="token punctuation">(</span>birthdate<span class="token punctuation">:</span> date<span class="token punctuation">,</span> evaldate<span class="token punctuation">:</span> date<span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">&gt;</span> <span class="token builtin">int</span><span class="token punctuation">:</span>
+    <span class="token triple-quoted-string string">'''Returns age given birthdate and evaldate
+
+    Raises:
+        ValueError: if evaldate &lt; birthdate
+    '''</span>
+    <span class="token keyword">if</span> evaldate <span class="token operator">&lt;</span> birthdate<span class="token punctuation">:</span>
+        <span class="token keyword">raise</span> ValueError<span class="token punctuation">(</span><span class="token string">'evaldate must be greater than or equal to birthdate'</span><span class="token punctuation">)</span>
+
+    age <span class="token operator">=</span> evaldate<span class="token punctuation">.</span>year <span class="token operator">-</span> birthdate<span class="token punctuation">.</span>year
+
+    <span class="token triple-quoted-string string">''' would add below lines to fix the failed test
+    if (evaldate.month, evaldate.day) &lt; (birthdate.month, birthdate.day):
+        age -= 1
+    '''</span>
+
+    <span class="token keyword">return</span> age
+</code></pre>
+<h4 id="pytest-a-idpytesta">Pytest <a id="pytest"></a></h4>
+<p>With Pytest, we can write a fucntion that covers a specific test case. For example,</p>
+<pre class=" language-python"><code class="prism  language-python"><span class="token comment"># test_agecalc.py</span>
+<span class="token keyword">from</span> datetime <span class="token keyword">import</span> date
+
+<span class="token keyword">import</span> pytest
+<span class="token keyword">import</span> agecalc
+
+
+<span class="token keyword">def</span> <span class="token function">test_calculate_exact_month_day</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    birthdate <span class="token operator">=</span> date<span class="token punctuation">(</span><span class="token number">2000</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span>
+    evaldate <span class="token operator">=</span> date<span class="token punctuation">(</span><span class="token number">2010</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span>
+    <span class="token keyword">assert</span> agecalc<span class="token punctuation">.</span>calculate<span class="token punctuation">(</span>birthdate<span class="token punctuation">,</span> evaldate<span class="token punctuation">)</span> <span class="token operator">==</span> <span class="token number">10</span>
+
+<span class="token keyword">def</span> <span class="token function">test_calculate_greater_month_day</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    birthdate <span class="token operator">=</span> date<span class="token punctuation">(</span><span class="token number">2000</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span>
+    evaldate <span class="token operator">=</span> date<span class="token punctuation">(</span><span class="token number">2010</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span>
+    <span class="token keyword">assert</span> agecalc<span class="token punctuation">.</span>calculate<span class="token punctuation">(</span>birthdate<span class="token punctuation">,</span> evaldate<span class="token punctuation">)</span> <span class="token operator">==</span> <span class="token number">10</span>
+
+<span class="token keyword">def</span> <span class="token function">test_calculate_smaller_month_day</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    birthdate <span class="token operator">=</span> date<span class="token punctuation">(</span><span class="token number">2000</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span>
+    evaldate <span class="token operator">=</span> date<span class="token punctuation">(</span><span class="token number">2010</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span>
+    <span class="token keyword">assert</span> agecalc<span class="token punctuation">.</span>calculate<span class="token punctuation">(</span>birthdate<span class="token punctuation">,</span> evaldate<span class="token punctuation">)</span> <span class="token operator">==</span> <span class="token number">9</span>
+
+<span class="token keyword">def</span> <span class="token function">test_calculate_present_date_less_than_birthdate_raises_valueerror</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    birthdate <span class="token operator">=</span> date<span class="token punctuation">(</span><span class="token number">2000</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span>
+    evaldate <span class="token operator">=</span> date<span class="token punctuation">(</span><span class="token number">1999</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span>
+
+    <span class="token comment"># exepct ValueError exception</span>
+    <span class="token keyword">with</span> pytest<span class="token punctuation">.</span>raises<span class="token punctuation">(</span>ValueError<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        agecalc<span class="token punctuation">.</span>calculate<span class="token punctuation">(</span>birthdate<span class="token punctuation">,</span> evaldate<span class="token punctuation">)</span>
+</code></pre>
+<p>This is a sample output that would result from the above tests.<br>
+<img src="https://raw.githubusercontent.com/peter-evolent/python-testing-examples/master/images/pytest-result.png" alt="Pytest Result"></p>
+<h4 id="behave-a-idbehavea">Behave <a id="behave"></a></h4>
+<p>With Behave, we use gherkin to define a feature and scenarios.</p>
+<pre class=" language-gherkin"><code class="prism  language-gherkin"><span class="token feature"><span class="token keyword">Feature:</span><span class="token important"> Calculate age given birthdate and evaldate</span>
+
+</span>  <span class="token scenario"><span class="token keyword">Scenario:</span><span class="token important"> Exact month day</span></span>
+    <span class="token atrule">Given</span> birthdate <span class="token string">"2000-01-01"</span> and evaldate <span class="token string">"2010-01-01"</span>
+     <span class="token atrule">When</span> invoked
+     <span class="token atrule">Then</span> the result should be equal to <span class="token string">"10"</span>
+
+  <span class="token scenario"><span class="token keyword">Scenario:</span><span class="token important"> Greater month day</span></span>
+    <span class="token atrule">Given</span> birthdate <span class="token string">"2000-01-01"</span> and evaldate <span class="token string">"2010-02-01"</span>
+     <span class="token atrule">When</span> invoked
+     <span class="token atrule">Then</span> the result should be equal to <span class="token string">"10"</span>
+
+  <span class="token scenario"><span class="token keyword">Scenario:</span><span class="token important"> Smaller month day</span></span>
+    <span class="token atrule">Given</span> birthdate <span class="token string">"2000-01-02"</span> and evaldate <span class="token string">"2010-01-01"</span>
+     <span class="token atrule">When</span> invoked
+     <span class="token atrule">Then</span> the result should be equal to <span class="token string">"9"</span>
+
+  <span class="token scenario"><span class="token keyword">Scenario:</span><span class="token important"> Evaldate &lt; brithdate raise ValueError</span></span>
+    <span class="token atrule">Given</span> birthdate <span class="token string">"2000-01-01"</span> and evaldate <span class="token string">"1999-01-01"</span>
+     <span class="token atrule">When</span> invoked
+     <span class="token atrule">Then</span> it should raise ValueError
+</code></pre>
+<p>Behave parse the feature file and run corresponding step functions.</p>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">from</span> behave <span class="token keyword">import</span> given<span class="token punctuation">,</span> then<span class="token punctuation">,</span> when
+<span class="token keyword">import</span> agecalc
+
+
+@given<span class="token punctuation">(</span><span class="token string">'birthdate "{birthdate:ti}" and evaldate "{evaldate:ti}"'</span><span class="token punctuation">)</span>
+<span class="token keyword">def</span> <span class="token function">step_impl</span><span class="token punctuation">(</span>context<span class="token punctuation">,</span> birthdate<span class="token punctuation">,</span> evaldate<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    context<span class="token punctuation">.</span>birthdate <span class="token operator">=</span> birthdate<span class="token punctuation">.</span>date<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    context<span class="token punctuation">.</span>evaldate <span class="token operator">=</span> evaldate<span class="token punctuation">.</span>date<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+@when<span class="token punctuation">(</span><span class="token string">'invoked'</span><span class="token punctuation">)</span>
+<span class="token keyword">def</span> <span class="token function">step_impl</span><span class="token punctuation">(</span>context<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">try</span><span class="token punctuation">:</span>
+        context<span class="token punctuation">.</span>result <span class="token operator">=</span> agecalc<span class="token punctuation">.</span>calculate<span class="token punctuation">(</span>context<span class="token punctuation">.</span>birthdate<span class="token punctuation">,</span> context<span class="token punctuation">.</span>evaldate<span class="token punctuation">)</span>
+    <span class="token keyword">except</span> Exception <span class="token keyword">as</span> e<span class="token punctuation">:</span>
+        context<span class="token punctuation">.</span>e <span class="token operator">=</span> e
+
+@then<span class="token punctuation">(</span><span class="token string">'the result should be equal to "{expected:d}"'</span><span class="token punctuation">)</span>
+<span class="token keyword">def</span> <span class="token function">step_impl</span><span class="token punctuation">(</span>context<span class="token punctuation">,</span> expected<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">assert</span> context<span class="token punctuation">.</span>result <span class="token operator">==</span> expected
+
+@then<span class="token punctuation">(</span><span class="token string">'it should raise ValueError'</span><span class="token punctuation">)</span>
+<span class="token keyword">def</span> <span class="token function">step_impl</span><span class="token punctuation">(</span>context<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">assert</span> <span class="token builtin">isinstance</span><span class="token punctuation">(</span>context<span class="token punctuation">.</span>e<span class="token punctuation">,</span> ValueError<span class="token punctuation">)</span>
+</code></pre>
+<p>Resuling output would be look like this:<br>
+<img src="https://raw.githubusercontent.com/peter-evolent/python-testing-examples/master/images/behave-result.png" alt="Behave Result"></p>
+</div>
+</body>
+
+</html>
