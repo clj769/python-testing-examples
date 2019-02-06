@@ -106,3 +106,13 @@ jobs:
 
       - store_artifacts:
           path: test-reports
+
+workflows:
+  version: 2
+  tests:
+    jobs:
+      - pytest
+      - behave
+  analysis:
+    jobs:
+      - analyze
