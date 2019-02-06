@@ -46,6 +46,14 @@ test: init
 	@echo
 
 
+.PHONY: test-reports
+test-reports: init
+	@echo $(TAG)Running tests and generating reports $(END)
+	pytest --junitxml=test-reports/pytest.xml --cov ./agecalc --cov ./tests --doctest-modules --verbose ./tests
+	
+	@echo	
+
+
 .PHONY: test-behave
 test-behave: init
 	@echo $(TAG)Running behave tests $(END)
@@ -53,6 +61,12 @@ test-behave: init
 	
 	@echo
 
+.PHONY: test-behave-reports
+test-behave-reports: init
+	@echo $(TAG)Running behave tests and generating reports $(END)
+	behave --junit --junit-directory test-reports
+
+	@echo
 
 .PHONY: lint
 lint:
