@@ -3,27 +3,39 @@
 # Check https://circleci.com/docs/2.0/language-python/ for more details
 #
 version: 2
+
+defaults: &defaults
+  docker:
+      - image: circleci/python:3.6.1
+  working_directory: ~/repo
+
+aliases:
+  - &restore_cache
+    keys:
+      - v1-dependencies-{{ checksum "requirements-dev.txt" }}
+      - v1-dependencies-
+
 jobs:
   build:
-    docker:
-      - image: circleci/python:3.6.1
-
-    working_directory: ~/repo
-
+    <<: *defaults
     steps:
       - checkout
 
-      # Download and cache dependencies
-      - restore_cache:
-          keys:
-          - v1-dependencies-{{ checksum "requirements-dev.txt" }}
-          # fallback to using the latest cache if no exact match is found
-          - v1-dependencies-
+      - restore_cache: *restore_cache
+
+      - run:
+          name: create venv
+          command: python3 -m venv venv
+
+      - run:
+          name: install dev dependencies
+          command: |
+            . venv/bin/activate
+            pip install -r requirements-dev.txt
 
       - run:
           name: install dependencies
           command: |
-            python3 -m venv venv
             . venv/bin/activate
             make init
 
@@ -31,24 +43,63 @@ jobs:
           paths:
             - ./venv
           key: v1-dependencies-{{ checksum "requirements-dev.txt" }}
+  analyze:
+    <<: *defaults
+    steps:
+      - checkout
+
+      - restore_cache: *restore_cache
 
       - run:
-          name: run pytest and generate reports
-          command: |
-            . venv/bin/activate
-            make test-behave-reports
-
-      - run:
-          name: run behave tests
-          command: |
-            . venv/bin/activate
-            make test-behave
+          name: create venv
+          command: python3 -m venv venv
 
       - run:
           name: run lint
           command: |
             . venv/bin/activate
             make lint
+
+  pytest:
+    <<: *defaults
+    steps:
+      - checkout
+
+      - restore_cache: *restore_cache
+
+      - run:
+          name: create venv
+          command: python3 -m venv venv
+
+      - run:
+          name: run pytest and generate reports
+          command: |
+            . venv/bin/activate
+            make test-reports
+
+      - store_test_results:
+          path: test-reports
+
+      - store_artifacts:
+          path: test-reports
+
+  behave:
+    <<: *defaults
+    steps:
+      - checkout
+
+      - restore_cache: *restore_cache
+
+      - run:
+          name: create venv
+          command: python3 -m venv venv
+
+      - run:
+          name: run behave and generate reports
+          command: |
+            python3 -m venv venv
+            . venv/bin/activate
+            make test-behave-reports
 
       - store_test_results:
           path: test-reports
