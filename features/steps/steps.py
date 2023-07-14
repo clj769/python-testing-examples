@@ -16,6 +16,7 @@ def step_impl(context):
 
 @then('the result should be equal to "{expected:d}"')
 def step_impl(context, expected):
+    print(context.result,expected)
     assert context.result == expected
 
 @then('it should raise ValueError')

@@ -13,9 +13,8 @@ def calculate(birthdate: date, evaldate: date) -> int:
 
     age = evaldate.year - birthdate.year
 
-    """would add below lines to fix the failed test
+    #would add below lines to fix the failed test
     if (evaldate.month, evaldate.day) < (birthdate.month, birthdate.day):
         age -= 1
-    """
 
     return age
